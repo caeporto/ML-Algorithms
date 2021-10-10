@@ -31,7 +31,7 @@ func main(){
 
 	X := x.Slice(1, 2, 0, m).(*mat.Dense) //get just the X-Axis without the additional row
 
-	linearRegression.PlotAndSaveData("Food Truck", "Population", "Profit", X, y, nil, m, "./resources/points")
+	linearRegression.PlotAndSaveData("Food Truck", "Population (in 10.000s)", "Profit (in $10.000s)", X, y, 1,nil, m, "./resources/points")
 
 	theta := mat.NewDense(2, 1, nil) //theta_0 and theta_1 terms
 
@@ -46,8 +46,8 @@ func main(){
 	var ypred mat.Dense
 	ypred.Mul(theta.T(), x)
 
-	linearRegression.PlotAndSaveData("Food Truck", "Population", "Profit", X, y, &ypred, m, "./resources/predicted")
+	linearRegression.PlotAndSaveData("Food Truck", "Population (in 10.000s)", "Profit (in $10.000s)", X, y, 1, &ypred, m, "./resources/predicted")
 
-	linearRegression.PlotAndSaveData("Cost History", "Iterations", "Cost", xIterations, yCost, nil, iterations, "./resources/cost")
+	linearRegression.PlotAndSaveData("Cost History", "Iterations", "Cost", xIterations, yCost, 10, nil, iterations, "./resources/cost")
 
 }

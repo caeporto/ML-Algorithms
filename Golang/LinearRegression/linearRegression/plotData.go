@@ -9,17 +9,27 @@ import (
 	"image/color"
 )
 
-func PlotAndSaveData(title string, xAxis string, yAxis string, x *mat.Dense, y *mat.Dense, yp *mat.Dense, m int, path string){
+func PlotAndSaveData(title string, xAxis string, yAxis string, x *mat.Dense, y *mat.Dense, pointsRatio int, yp *mat.Dense, m int, path string){
 	p := plot.New()
 
 	p.Title.Text = title
 	p.X.Label.Text = xAxis
 	p.Y.Label.Text = yAxis
 
-	pts := make(plotter.XYs, m)
+	var ratio int
+	var pts plotter.XYs
+	if pointsRatio != 1 {
+		ratio = m / pointsRatio
+		pts = make(plotter.XYs, pointsRatio)
+	} else {
+		ratio = pointsRatio
+		pts = make(plotter.XYs, m)
+	}
 	for i := 0; i < m; i++ {
-		pts[i].X = x.At(0, i)
-		pts[i].Y = y.At(0, i)
+		if i % ratio == 0 {
+			pts[i / ratio].X = x.At(0, i)
+			pts[i / ratio].Y = y.At(0, i)
+		}
 	}
 
 	s, err := plotter.NewScatter(pts)

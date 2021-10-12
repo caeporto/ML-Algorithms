@@ -9,7 +9,7 @@ func NormalEquation(x *mat.Dense, y *mat.Dense) *mat.Dense{
 	var theta, left, right mat.Dense
 	left.Mul(x.T(), x)
 	left.Inverse(&left)
-	right.Mul(x.T(), y)
+	right.Mul(x, y.T())
 	theta.Mul(&left, &right)
 
 	return &theta

@@ -2,33 +2,28 @@ package featureNormalization
 
 import (
 	"gonum.org/v1/gonum/mat"
+	"gonum.org/v1/gonum/stat"
 	"math"
 )
 
-func stdDeviationFeatures(XFeat mat.Dense, mean mat.Dense) *mat.Dense{
-	features, values := XFeat.Dims()
+func stdDeviationFeatures(XFeat mat.Dense) *mat.Dense{
+	features, _ := XFeat.Dims()
 	sigma := make([]float64, features)
 	for feature := 0; feature < features; feature++ {
-		featSum := 0.0
-		sigma[feature] = 0
-		for value := 0; value < values; value++ {
-			featSum += math.Pow(math.Abs(XFeat.At(feature, value) - mean.At(0, feature)), 2)
-		}
-		featSum /= float64(values)
-		sigma[feature] = math.Sqrt(featSum)
+		featureRow := XFeat.RawRowView(feature)
+		stdDev := math.Sqrt(stat.Variance(featureRow, nil))
+		sigma[feature] = stdDev
 	}
 	return mat.NewDense(1, features, sigma)
 }
 
 func meanFeatures(XFeat mat.Dense) *mat.Dense{
-	features, values := XFeat.Dims()
+	features, _ := XFeat.Dims()
 	mu := make([]float64, features)
 	for feature := 0; feature < features; feature++ {
-		mu[feature] = 0
-		for value := 0; value < values; value++ {
-			mu[feature] += XFeat.At(feature, value)
-		}
-		mu[feature] /= float64(values)
+		featureRow := XFeat.RawRowView(feature)
+		mean := stat.Mean(featureRow, nil)
+		mu[feature] = mean
 	}
 	return mat.NewDense(1, features, mu)
 }
@@ -39,7 +34,7 @@ func NormalizeFeatures(X *mat.Dense) *mat.Dense{
 	features, values := XNorm.Dims()
 
 	mu := meanFeatures(XNorm)
-	sigma := stdDeviationFeatures(XNorm, *mu)
+	sigma := stdDeviationFeatures(XNorm)
 
 	for feature := 0; feature < features; feature++ {
 		for value := 0; value < values; value++ {

@@ -1,4 +1,4 @@
-package featureNormalization
+package FeatureNormalization
 
 import (
 	"gonum.org/v1/gonum/mat"

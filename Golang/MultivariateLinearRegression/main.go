@@ -8,14 +8,6 @@ import (
 	"strconv"
 )
 
-func makeRange(min, max int) []float64 {
-	a := make([]float64, max-min+1)
-	for i := range a {
-		a[i] = float64(min + i)
-	}
-	return a
-}
-
 func main(){
 	//2 features
 	records := Util.ReadCSV("./resources/data.csv")
@@ -55,7 +47,7 @@ func main(){
 	alpha := 0.005
 
 	costHistory := GradientDescent.GradientDescent(xnorm, y, theta, iterations, alpha, m)
-	iter := makeRange(1, iterations)
+	iter := Util.MakeRange(1, iterations)
 	xIterations := mat.NewDense(1, iterations, iter)
 	yCost := mat.NewDense(1, iterations, costHistory)
 
